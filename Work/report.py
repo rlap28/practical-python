@@ -8,6 +8,14 @@ def read_portfolio(filename):
     '''Computes the total cost (shares*price) of a portfolio file'''
     portfolio = []
 
+    # with open(filename, 'rt') as f:
+    #     rows = csv.reader(f)
+    #     headers = next(rows)
+    #     for row in rows:
+    #         holding = dict(zip(headers, row))
+    #         portfolio.append(holding)
+    # return portfolio
+
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
