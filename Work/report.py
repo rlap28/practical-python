@@ -2,45 +2,60 @@
 #
 # Exercise 2.4
 
+import sys
 import csv
+import fileparse as fp
 
 def read_portfolio(filename):
     '''Computes the total cost (shares*price) of a portfolio file'''
-    portfolio = []
-
-    # with open(filename, 'rt') as f:
-    #     rows = csv.reader(f)
-    #     headers = next(rows)
-    #     for row in rows:
-    #         holding = dict(zip(headers, row))
-    #         portfolio.append(holding)
-    # return portfolio
-
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for row in rows:
-            holding = {}
-            holding['name'] = row[0]
-            holding['shares'] = int(row[1])
-            holding['price'] = float(row[2])
-            # holding = (row[0], int(row[1]), float(row[2]))
-            portfolio.append(holding)
-    return portfolio
+    
+    with open(filename) as lines:
+        return fp.parse_csv(lines, select = ['name', 'shares', 'price'],
+            types = [str, int, float])
 
 def read_prices(filename):
 
-    stock_prices = {}
+    with open(filename) as lines:
+        return dict(fp.parse_csv(lines, types = [str, float],
+            has_headers = False))
 
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        for row in rows:
-            try:
-                stock_prices[row[0]] = float(row[1])
-            except IndexError:
-                pass
+# def read_portfolio(filename):
+#     '''Computes the total cost (shares*price) of a portfolio file'''
+#     portfolio = []
 
-    return stock_prices
+#     # with open(filename, 'rt') as f:
+#     #     rows = csv.reader(f)
+#     #     headers = next(rows)
+#     #     for row in rows:
+#     #         holding = dict(zip(headers, row))
+#     #         portfolio.append(holding)
+#     # return portfolio
+
+#     with open(filename, 'rt') as f:
+#         rows = csv.reader(f)
+#         headers = next(rows)
+#         for row in rows:
+#             holding = {}
+#             holding['name'] = row[0]
+#             holding['shares'] = int(row[1])
+#             holding['price'] = float(row[2])
+#             # holding = (row[0], int(row[1]), float(row[2]))
+#             portfolio.append(holding)
+#     return portfolio
+
+# def read_prices(filename):
+
+#     stock_prices = {}
+
+#     with open(filename, 'rt') as f:
+#         rows = csv.reader(f)
+#         for row in rows:
+#             try:
+#                 stock_prices[row[0]] = float(row[1])
+#             except IndexError:
+#                 pass
+
+#     return stock_prices
 
 def gain_calc():
     portfolio = read_portfolio('Data/portfolio.csv')
@@ -52,7 +67,10 @@ def gain_calc():
 
     return gain
 
-def make_report(portfolio, prices):
+def portfolio_report(portfolio_filename, prices_filename):
+
+    portfolio = read_portfolio(portfolio_filename)
+    prices = read_prices(prices_filename)
 
     report = []
 
@@ -61,23 +79,16 @@ def make_report(portfolio, prices):
             prices[s['name']], prices[s['name']]-s['price']))
 
     headers = ('Name', 'Shares', 'Price', 'Change')
-    for header in headers:
-        print(f'{header:>10s}', end = ' ')
+    print('%10s %10s %10s %10s'  % headers)
+    print(('-' * 10 + ' ') * len(headers))
+    for row in report:
+        print('%10s %10d %10.2f %10.2f' % row)
 
-    print('')
+def main(argv):
+    portfolio_report(argv[1], argv[2])
 
-    for header in headers:
-        print('-'*10, end = ' ')
-
-    print('')
-
-    
-    # for r in report:
-    #     print('%10s %10d %10.2f %10.2f' % r)
-
-    for name, shares, price, change in report:
-        price_mod = '$' + str('%.2f' % price)
-        print(f'{name:>10s} {shares:>10d} {price_mod:>10s} {change:>10.2f}')
+if __name__ == '__main__':    
+    main(sys.argv)
 
 
 
