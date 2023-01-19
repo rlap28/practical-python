@@ -7,7 +7,7 @@ import report as rep
 def portfolio_cost(filename):
 	'Evaluating total cost of shares portfolio'
 
-	return sum([s['shares']*s['price'] for s in rep.read_portfolio(filename)])
+	return sum([s.shares*s.price for s in rep.read_portfolio(filename)])
 
 # def portfolio_cost(filename):
 # 	'Evaluating total cost of shares portfolio'
