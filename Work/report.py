@@ -5,18 +5,14 @@
 import sys
 import csv
 import fileparse as fp
-import stock
 import tableformat
+from portfolio import Portfolio
 
-def read_portfolio(filename):
+def read_portfolio(filename, **opts):
     '''Computes the total cost (shares*price) of a portfolio file'''
     
     with open(filename) as lines:
-        portdicts = fp.parse_csv(lines, select = ['name', 'shares', 'price'],
-            types = [str, int, float])
-
-    portfolio = [stock.Stock(d['name'], d['shares'], d['price']) for d in portdicts]
-    return portfolio
+        return Portfolio.from_csv(lines, **opts)
 
 def read_prices(filename):
 
