@@ -1,6 +1,7 @@
 # portfolio.py
 
 import stock
+import fileparse as fileparse
 
 class Portfolio:
 
@@ -20,7 +21,7 @@ class Portfolio:
 
         return self
 
-    def append(self, holdings):
+    def append(self, holding):
         if not isinstance(holding, stock.Stock):
             raise TypeError('Expected a Stok instance')
         self._holdings.append(holding)
